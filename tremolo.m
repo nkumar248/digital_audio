@@ -5,7 +5,7 @@ addpath('..')
 
 infile = '../examples/piano-C4.wav';
 outfile = 'test_out.wav';
-depth = 0.5; % 0 (no effect) to 1.0 (max amplitude modulation)
+depth = 1; % 0 (no effect) to 1.0 (max amplitude modulation)
 lfo_freq = 5; % 0.1 - 10 Hz
 lfo_shape = 'sin'; % options: sin, tri, rect
 
@@ -14,20 +14,24 @@ lfo_shape = 'sin'; % options: sin, tri, rect
 input_audio_len = length(y);
 
 
-% current idea: 
+% idea: 
 % sample modulation wave (given shape and freq) at same sample rate as
-% input sound, then multiplay mod samples and sound samples element-wise
-% while multiplying depth in some way
+% input sound, then multiply mod samples and sound samples element-wise
+% while incorporating depth in some way
 
 % sampling vector containing sampling instants
 t = (0:input_audio_len-1) / FS;
 
 % amplitude modulation wave at lfo_freq and sampled at instants in t
-% TODO: add tri, square, other waveforms
 switch lfo_shape
     case 'sin'
         lfo = sin(2*pi*lfo_freq*t);
+    case 'tri'
+        lfo = sawtooth(2*pi*lfo_freq*t, 0.5); % Triangle wave (using "signal processing toolbox")
+    case 'rect'
+        lfo = sign(sin(2*pi*lfo_freq*t)); 
 end
+
 
 % determine how strong lfo modulation should be using depth param
 % lfo oscillates between -1 and +1, after mult. with depth between -depth
@@ -36,8 +40,12 @@ end
 % - depth = 1 -> 0 <= lfo <= 2 -> danger of clipping!
 % - 0 <= depth <= 1 -> 0 < lfo < 2 -> danger of clipping!
 lfo = 1 + depth * lfo;
-
 lfo = lfo';
+
+
+% debug
+plot_signal(lfo, FS)
+
 
 % multiply element-wise
 y_trem = y .* lfo;
@@ -55,3 +63,5 @@ plot_signal(y_trem,FS);
 
 % save
 save_audio(outfile,y_trem,FS)
+
+
