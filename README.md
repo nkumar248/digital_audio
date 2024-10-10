@@ -1,2 +1,2 @@
 # digital_audio
-Digital Audio Stuff
+This repo contains stuff related to digital audio. 
