@@ -1,3 +1,6 @@
+% code written for digital audio class HS24, functions such as load_audio, save_audio, .. given 
+% task: implement vibrato 
+
 addpath('..')
 
 infile = '';
