@@ -3,8 +3,8 @@
 
 addpath('..')
 
-infile = '../examples/piano-C4.wav';
-outfile = 'test_out.wav';
+infile = '';
+outfile = '';
 depth = 1; % 0 (no effect) to 1.0 (max amplitude modulation)
 lfo_freq = 5; % 0.1 - 10 Hz
 lfo_shape = 'sin'; % options: sin, tri, rect
